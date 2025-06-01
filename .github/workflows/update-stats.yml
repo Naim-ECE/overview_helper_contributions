@@ -1,0 +1,23 @@
+name: Update Stats Daily
+on:
+  schedule:
+    - cron: '0 12 * * *'  # Runs at 12:00 PM UTC daily
+  workflow_dispatch:       # Allows manual runs
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Update timestamp in README
+        run: |
+          TODAY=$(date +'%Y%m%d')
+          sed -i "s/random=[0-9]*/random=$TODAY/g" README.md
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: auto-update stats cache buster"
+          branch: main     # Change if your default branch isn't main
